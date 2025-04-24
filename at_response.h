@@ -46,6 +46,7 @@ struct iovec;
 	_( MODE,        "^MODE",        "^MODE:") \
 	_( NO_CARRIER,  "NO CARRIER",   "NO CARRIER\r") \
 	_( QTONEDET,  "DTMF DET",       "+QTONEDET:") \
+	_( RXDTMF,  "DTMF DET",       "+RXDTMF:") \
 \
 	_( NO_DIALTONE, "NO DIALTONE",  "NO DIALTONE\r") \
 	_( OK,          "OK",           "OK\r") \

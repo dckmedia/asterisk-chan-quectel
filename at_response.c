@@ -125,10 +125,21 @@ static int at_response_dtmfdet (struct pvt * pvt, const char* str)
         sscanf (str, "+QTONEDET: %d", &dtmfdigit);
 		ast_log (LOG_ERROR, "local dtmf accessed '%d'\n", dtmfdigit);
         dtmf_alloc(pvt, dtmfdigit);
-	return 0;
+        return 0;
 }
         
-
+static int at_response_rxdtmf (struct pvt * pvt, const char* str)
+{
+        unsigned char dtmfchar;
+        int dtmfdigit;
+        struct dtmf * dtmf;
+        sscanf (str, "+RXDTMF: %c", &dtmfchar);
+        dtmfdigit = (int)dtmfchar;
+		ast_log (LOG_ERROR, "local dtmf accessed '%d'\n", dtmfdigit);
+        dtmf_alloc(pvt, dtmfdigit);
+	return 0;
+}
+ 
 
 
 static int at_response_cend (struct pvt * pvt, const char* str)
@@ -1732,7 +1743,7 @@ static int at_response_cusd (struct pvt * pvt, char * str, size_t len)
 		}
 	} else if (dcs == 2) { // UCS-2
 		int cusd_nibbles = unhex(cusd, cusd);
-		res = ucs2_to_utf8((const uint16_t*)cusd, (cusd_nibbles + 1) / 4, cusd_utf8_str, sizeof(cusd_utf8_str) - 1);
+		res = ucs2_to_utf8(cusd, (cusd_nibbles + 1) / 4, cusd_utf8_str, sizeof(cusd_utf8_str) - 1);
 	} else {
 		res = -1;
 	}
@@ -2124,6 +2135,8 @@ int at_response (struct pvt* pvt, const struct iovec iov[2], int iovcnt, at_res_
 				return at_response_rcend (pvt, str);
 			case RES_QTONEDET:
 				return at_response_dtmfdet (pvt, str);
+			case RES_RXDTMF:
+				return at_response_rxdtmf (pvt, str);
 
 			case RES_CONN:
 				return at_response_conn (pvt, str);
